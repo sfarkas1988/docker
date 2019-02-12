@@ -1,0 +1,24 @@
+version: '2'
+
+services:
+  db:
+    image: mariadb
+    volumes:
+      - "./.data/mysql:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    ports:
+      - 3306:3306
+  php:
+    build:
+      context: php7-fpm
+      args:
+        TIMEZONE: ${TIMEZONE}
+    volumes:
+      - ${WORKSPACE_PATH}:/var/www
+  nginx:
+    build: nginx
+    ports:
+      - 80:80
+    volumes_from:
+      - php
